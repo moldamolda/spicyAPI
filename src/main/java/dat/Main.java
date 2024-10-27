@@ -10,6 +10,6 @@ import jakarta.persistence.EntityManagerFactory;
 public class Main {
     private static final EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("spice");
     public static void main(String[] args) {
-        ApplicationConfig.startServer(7080, emf);
+        ApplicationConfig.startServer(7007, emf);
     }
 }

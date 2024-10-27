@@ -11,7 +11,7 @@ import java.util.Set;
 public class Populate {
     public static void main(String[] args) {
 
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("spice");
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("spice"); ///AWDadasdasd
 
         Set<Spice> indianSpice = getIndianSpice();
         Set<Spice> middleEasternSpice = getMiddleEasternSpice();
