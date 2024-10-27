@@ -1,0 +1,39 @@
+GET {{url}}/spices/
+
+###
+
+GET {{url}}/spices/spice/2
+
+###
+
+POST {{url}}/spices/spice
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "name": "Pepperroot",
+  "description": "usage as freshly ground pepperroot",
+  "flavor_profile": "spicy"
+}
+
+###
+
+
+PUT {{url}}/spices/spice/3
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+
+{
+  "name": "cinnamon",
+  "description": "usage as freshly ground cinnamon",
+  "flavor_profile": "sweet"
+}
+
+###
+
+DELETE {{url}}/spices/spice/2
+Authorization: Bearer {{jwt_token}}
+
+
+###
