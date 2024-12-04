@@ -25,7 +25,7 @@ public class Routes {
             path("/spices", spiceRoute.getRoutes());
             path("/auth", authRoute.getSecurityRoutes());
             
-            //fordi vi finder users favorite spices og cuisines ghkjvhbkjblkjkibnkjn
+            //fordi vi finder users favorite spices og cuisines ghkjvhbkjblkjkibnkjnqewdqwedq
             path("/users", favoriteRoute.getRoutes());
             path("/cuisines", cuisineRoute.getRoutes());
 
