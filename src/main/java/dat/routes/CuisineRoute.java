@@ -29,7 +29,6 @@ public class CuisineRoute {
             put("/cuisine/{id}", cuisineController::update,Role.ADMIN);
             delete("/cuisine/{id}", cuisineController::delete,Role.ADMIN);
 
-
-        };
+      };
     }
 }
