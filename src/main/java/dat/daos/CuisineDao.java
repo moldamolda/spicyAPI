@@ -62,11 +62,29 @@ public class CuisineDao {
     public void delete(Long id) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            Cuisine cuisine = em.find(Cuisine.class, id);
-            if (cuisine != null){
+            try {
+                Cuisine cuisine = em.find(Cuisine.class, id);
+                if (cuisine == null) {
+                    throw new RuntimeException("Cuisine with id " + id + " not found");
+                }
+
+                // Clear relationships before deletion
+                if (cuisine.getFavoriteSet() != null) {
+                    cuisine.getFavoriteSet().forEach(favorite ->
+                            favorite.getCuisines().remove(cuisine));
+                }
+
+                if (cuisine.getSpiceSet() != null) {
+                    cuisine.getSpiceSet().forEach(spice ->
+                            spice.getCuisineSet().remove(cuisine));
+                }
+
                 em.remove(cuisine);
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+                throw e;
             }
-            em.getTransaction().commit();
         }
     }
 

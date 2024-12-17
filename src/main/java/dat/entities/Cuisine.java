@@ -33,10 +33,10 @@ public class Cuisine {
     @Column(name = "flavor_profile", nullable = false)
     private String flavorProfile;
 
-    @ManyToMany(mappedBy = "cuisines", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "cuisines", fetch = FetchType.LAZY)
     private Set<Favorite> favoriteSet;
 
-    @ManyToMany(mappedBy = "cuisineSet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "cuisineSet", fetch = FetchType.LAZY)
     private Set<Spice> spiceSet = new HashSet<>(); // = new HashSet<>();
 
     public Cuisine(String name, String description, String flavorProfile) {
