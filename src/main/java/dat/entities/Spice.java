@@ -30,7 +30,7 @@ public class Spice {
     @Column(name = "flavor_profile", nullable = false)
     private String flavorProfile;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cuisine_spice",
             joinColumns = {@JoinColumn(name = "spice_id", referencedColumnName = "spice_id")},
@@ -38,7 +38,7 @@ public class Spice {
     )
     private Set<Cuisine> cuisineSet;
 
-    @ManyToMany(mappedBy = "spices", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "spices", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     private Set<Favorite> favorites = new HashSet<>();
 

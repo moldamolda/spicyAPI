@@ -25,7 +25,7 @@ public class SpiceRoute {
             get("/spice/{id}", spiceController::read,Role.ANYONE);
 
             put("/spice/{id}", spiceController::update, Role.ADMIN);
-            delete("/spice/{id}", spiceController::delete,Role.ADMIN);
+            delete("/spice/{id}", spiceController::delete,Role.USER);
         };
     }
 }

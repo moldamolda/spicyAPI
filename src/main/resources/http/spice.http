@@ -32,7 +32,7 @@ Authorization: Bearer {{jwt_token}}
 
 ###
 
-DELETE {{url}}/spices/spice/2
+DELETE {{url}}/spices/spice/1
 Authorization: Bearer {{jwt_token}}
 
 

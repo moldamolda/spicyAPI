@@ -66,10 +66,27 @@ public class SpiceDao {
     public void delete(Long id) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
+
             Spice spice = em.find(Spice.class, id);
-            if (spice != null){
+            if (spice != null) {
+                // Remove the spice from all favorites that reference it
+                for (Favorite favorite : spice.getFavorites()) {
+                    favorite.getSpices().remove(spice);
+                    em.merge(favorite);
+                }
+                spice.getFavorites().clear();
+
+                // Remove the spice from all cuisines that reference it
+                for (Cuisine cuisine : spice.getCuisineSet()) {
+                    cuisine.getSpiceSet().remove(spice);
+                    em.merge(cuisine);
+                }
+                spice.getCuisineSet().clear();
+
+                // Now it's safe to remove the spice
                 em.remove(spice);
             }
+
             em.getTransaction().commit();
         }
     }
