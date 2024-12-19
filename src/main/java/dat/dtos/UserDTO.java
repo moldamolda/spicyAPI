@@ -18,7 +18,7 @@ import java.util.Set;
 public class UserDTO {
     @JsonProperty("username")
     private String username;
-    @JsonProperty("password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     Set<String> roles = new HashSet();
     @JsonProperty("id")

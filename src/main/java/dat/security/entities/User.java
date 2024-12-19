@@ -1,5 +1,6 @@
 package dat.security.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dat.entities.Favorite;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,7 @@ public class User implements Serializable, ISecurityUser {
     @Column(name = "username", length = 25)
     private String username;
     @Basic(optional = false)
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
