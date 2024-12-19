@@ -32,15 +32,26 @@ public class SecurityDAO implements ISecurityDAO {
     @Override
     public UserDTO getVerifiedUser(String username, String password) throws ValidationException {
         try (EntityManager em = getEntityManager()) {
-            User user = em.find(User.class, username);
+            // Søg efter brugeren med en JPQL-forespørgsel baseret på username
+            User user = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (user == null)
-                throw new EntityNotFoundException("No user found with username: " + username); //RuntimeException
-            user.getRoles().size(); // force roles to be fetched from db
+                throw new EntityNotFoundException("No user found with username: " + username);
+
+            user.getRoles().size(); // Tvinger indlæsning af roller
+
             if (!user.verifyPassword(password))
                 throw new ValidationException("Wrong password");
+
+            System.out.println("Verified User: " + user); // Log brugeren før returnering
             return new UserDTO(user.getUsername(), user.getRoles().stream().map(r -> r.getRoleName()).collect(Collectors.toSet()), user.getId());
         }
     }
+
 
     @Override
     public User createUser(String username, String password) {

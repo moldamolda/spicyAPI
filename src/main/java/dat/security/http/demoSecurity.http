@@ -5,16 +5,16 @@ GET {{url}}/auth/test/
 POST {{url}}/auth/register/
 
 {
-  "username": "newuser",
-  "password": "securepassword"
+  "username": "y",
+  "password": "y"
 }
 
 ###
 POST {{url}}/auth/login/
 
 {
-    "username": "user",
-    "password": "test1234"
+    "username": "y",
+    "password": "y"
 }
 
 > {%

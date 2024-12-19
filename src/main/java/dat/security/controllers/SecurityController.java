@@ -53,6 +53,8 @@ public class SecurityController implements ISecurityController {
             ObjectNode returnObject = objectMapper.createObjectNode(); // for sending json messages back to the client
             try {
                 UserDTO user = ctx.bodyAsClass(UserDTO.class);
+                System.out.println("Received UserDTO: " + user); // Log det modtagne UserDTO objekt
+
                 UserDTO verifiedUser = securityDAO.getVerifiedUser(user.getUsername(), user.getPassword());
                 String token = createToken(verifiedUser);
 
@@ -64,9 +66,15 @@ public class SecurityController implements ISecurityController {
                 ctx.status(401);
                 System.out.println(e.getMessage());
                 ctx.json(returnObject.put("msg", e.getMessage()));
+            } catch (Exception e) {
+                ctx.status(500);
+                System.out.println("Unexpected error: " + e.getMessage());
+                e.printStackTrace();
+                ctx.json(returnObject.put("error", e.getMessage()));
             }
         };
     }
+
 
     @Override
     public Handler register() {
