@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Purpose:
@@ -37,12 +38,20 @@ public class FavoriteController implements IController<FavoriteDTO, Integer> {
     @Override
     public void read(Context ctx) {
         try {
-            Long id = Long.valueOf(ctx.pathParam("userId"));
+
+            String username = ctx.pathParam("username");
 
 
-            FavoriteDTO favoriteDTO = favoriteDao.read(id);
-            ctx.res().setStatus(200);
-            ctx.json(favoriteDTO, FavoriteDTO.class);
+            List<FavoriteDTO> favoriteDTOs = favoriteDao.read(username);
+
+
+            if (favoriteDTOs.isEmpty()) {
+                ctx.status(HttpStatus.NOT_FOUND);
+                ctx.json("No favorites found for user: " + username);
+            } else {
+                ctx.status(HttpStatus.OK);
+                ctx.json(favoriteDTOs);
+            }
         } catch (Exception e) {
             log.error("400{}",e.getMessage());
             throw new ApiException(400, e.getMessage());
@@ -53,6 +62,20 @@ public class FavoriteController implements IController<FavoriteDTO, Integer> {
     @Override
     public void readByName(Context ctx) {
 
+    }
+
+    public void getFavoriteFromUser(Context ctx) {
+        try {
+            String username = ctx.pathParam("username");
+            User user = SecurityDAO.getUserFromUsername(username);
+            List<FavoriteDTO> favoriteList = favoriteDao.getFavoriteFromUser(user);
+
+            ctx.status(HttpStatus.OK);
+            ctx.json(favoriteList);
+        } catch (Exception e) {
+            log.error("400{}",e.getMessage());
+            throw new ApiException(400, e.getMessage());
+        }
     }
 
     @Override
@@ -119,8 +142,9 @@ public class FavoriteController implements IController<FavoriteDTO, Integer> {
             FavoriteDTO favoriteDTO = ctx.bodyAsClass(FavoriteDTO.class);
 
             // == querying ==
-            Long favoriteId = ctx.pathParamAsClass("id", Long.class).get();
-            favoriteDao.update(favoriteId, favoriteDTO);
+
+            String username = ctx.pathParam("username");
+            favoriteDao.update(username, favoriteDTO);
 
             // == response ==
             ctx.res().setStatus(200);
@@ -133,9 +157,9 @@ public class FavoriteController implements IController<FavoriteDTO, Integer> {
     @Override
     public void delete(Context ctx) {
         try {
-            Long id = ctx.pathParamAsClass("userId", Long.class).get();
+            String username = ctx.pathParam("username");
             // entity
-            favoriteDao.delete(id);
+            favoriteDao.delete(username);
             // response
             ctx.res().setStatus(204);
         } catch (Exception e) {

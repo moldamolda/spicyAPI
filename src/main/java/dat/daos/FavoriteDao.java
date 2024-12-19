@@ -32,10 +32,18 @@ public class FavoriteDao {
         this.emf = emf;
     }
 
-    public FavoriteDTO read(Long id) {
+    public List<FavoriteDTO> read(String username) {
         try (EntityManager em = emf.createEntityManager()) {
-            Favorite favorite = em.find(Favorite.class, id);
-            return favorite != null ? new FavoriteDTO(favorite) : null;
+            TypedQuery<Favorite> query = em.createQuery(
+                    "SELECT f FROM Favorite f WHERE f.user.username = :username", Favorite.class
+            );
+            query.setParameter("username", username);
+
+            List<Favorite> favorites = query.getResultList();
+
+            return favorites.stream().map(FavoriteDTO::new).toList();
+        } catch (Exception e) {
+            throw new ApiException(500, "Error retrieving favorites for user: " + e.getMessage());
         }
     }
 
@@ -70,10 +78,10 @@ public class FavoriteDao {
 
 
 
-    public void delete(Long id) {
+    public void delete(String username) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            Favorite favorite = em.find(Favorite.class, id);
+            Favorite favorite = em.find(Favorite.class,username);
             if (favorite != null){
                 em.remove(favorite);
             }
@@ -81,11 +89,11 @@ public class FavoriteDao {
         }
     }
 
-    public FavoriteDTO update(Long id, FavoriteDTO favoriteDTO) {
+    public FavoriteDTO update(String username, FavoriteDTO favoriteDTO) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
 
-            Favorite f = em.find(Favorite.class, id);
+            Favorite f = em.find(Favorite.class, username);
             f.setName(favoriteDTO.getName());
             Favorite newCuisine = em.merge(f);
             em.getTransaction().commit();

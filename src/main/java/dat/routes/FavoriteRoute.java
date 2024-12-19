@@ -24,9 +24,9 @@ public class FavoriteRoute {
         return () -> {
             post("/{username}/favorites", favoriteController::create,Role.USER);
             get("/", favoriteController::readAll,Role.ADMIN);
-            get("/{id}", favoriteController::read,Role.ANYONE);
-            get("/{userId}/favorites", favoriteController::read,Role.USER);
-            delete("/{userId}/favorites/{spiceId}", favoriteController::delete,Role.USER);
+            get("/{username}", favoriteController::read,Role.ANYONE);
+            get("/{username}/favorites", favoriteController::getFavoriteFromUser,Role.USER);
+            delete("/{username}/favorites/{spiceId}", favoriteController::delete,Role.USER);
             post("/{username}/favorites/spices/{spiceId}", favoriteController::createSpiceFavorite,Role.USER);
             post("/{username}/favorites/cuisines/{cuisineId}", favoriteController::createCuisineFavorite,Role.USER);
 
