@@ -1,8 +1,8 @@
 package dat.security.daos;
 
+import dat.dtos.UserDTO;
 import dat.security.entities.User;
 import dat.security.exceptions.ValidationException;
-import dk.bugelhartmann.UserDTO;
 
 public interface ISecurityDAO {
     UserDTO getVerifiedUser(String username, String password) throws ValidationException;
