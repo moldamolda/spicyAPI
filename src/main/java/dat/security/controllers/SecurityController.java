@@ -1,5 +1,6 @@
 package dat.security.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nimbusds.jose.JOSEException;
@@ -52,20 +53,28 @@ public class SecurityController implements ISecurityController {
     @Override
     public Handler login() {
         return (ctx) -> {
-            ObjectNode returnObject = objectMapper.createObjectNode(); // for sending json messages back to the client
+            ObjectNode returnObject = objectMapper.createObjectNode();
             try {
-                UserDTO user = ctx.bodyAsClass(UserDTO.class);
+                String body = ctx.body();
+                System.out.println("Raw body received: " + body);
+
+                JsonNode jsonNode = objectMapper.readTree(body);
+                String username = jsonNode.get("username").asText();
+                String password = jsonNode.get("password").asText();
+
+                UserDTO user = new UserDTO(username, password);
+                System.out.println("Deserialized username: " + user.getUsername());
+                System.out.println("Deserialized password: " + user.getPassword());
+
                 UserDTO verifiedUser = securityDAO.getVerifiedUser(user.getUsername(), user.getPassword());
                 String token = createToken(verifiedUser);
 
                 ctx.status(200).json(returnObject
                         .put("token", token)
                         .put("username", verifiedUser.getUsername()));
-
-            } catch (EntityNotFoundException | ValidationException e) {
-                ctx.status(401);
-                System.out.println(e.getMessage());
-                ctx.json(returnObject.put("msg", e.getMessage()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                ctx.status(401).json(returnObject.put("msg", e.getMessage()));
             }
         };
     }
