@@ -3,7 +3,6 @@ package dat.daos;
 import dat.dtos.CuisineDTO;
 import dat.dtos.FavoriteDTO;
 import dat.dtos.SpiceDTO;
-import dat.dtos.UserDTO;
 import dat.entities.Cuisine;
 import dat.entities.Favorite;
 import dat.entities.Spice;
