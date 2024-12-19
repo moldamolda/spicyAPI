@@ -11,9 +11,7 @@ import dat.security.entities.User;
 import dat.security.exceptions.ApiException;
 import dat.security.exceptions.NotAuthorizedException;
 import dat.security.exceptions.ValidationException;
-import dk.bugelhartmann.ITokenSecurity;
-import dk.bugelhartmann.TokenSecurity;
-import dk.bugelhartmann.UserDTO;
+import dat.dtos.UserDTO;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.UnauthorizedResponse;
@@ -78,10 +76,12 @@ public class SecurityController implements ISecurityController {
                 UserDTO userInput = ctx.bodyAsClass(UserDTO.class);
                 User created = securityDAO.createUser(userInput.getUsername(), userInput.getPassword());
 
-                String token = createToken(new UserDTO(created.getUsername(), Set.of("USER")));
+                String token = createToken(new UserDTO(created.getUsername(), Set.of("USER"), created.getId()));
                 ctx.status(HttpStatus.CREATED).json(returnObject
                         .put("token", token)
-                        .put("username", created.getUsername()));
+                        .put("username", created.getUsername())
+                        .put("id", created.getId()));
+
             } catch (EntityExistsException e) {
                 ctx.status(HttpStatus.UNPROCESSABLE_CONTENT);
                 ctx.json(returnObject.put("msg", "User already exists"));

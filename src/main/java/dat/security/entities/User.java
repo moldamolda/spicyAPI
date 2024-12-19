@@ -28,9 +28,9 @@ public class User implements Serializable, ISecurityUser {
     private static final long serialVersionUID = 1L;
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "user_id")
-    //private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private long id;
     @Basic(optional = false)
     @Column(name = "username", length = 25)
     private String username;
