@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nimbusds.jose.JOSEException;
+import dat.dtos.UserDTOMixin;
 import dat.utils.Utils;
 import dat.config.HibernateConfig;
 import dat.security.daos.ISecurityDAO;
@@ -55,14 +56,8 @@ public class SecurityController implements ISecurityController {
         return (ctx) -> {
             ObjectNode returnObject = objectMapper.createObjectNode();
             try {
-                String body = ctx.body();
-                System.out.println("Raw body received: " + body);
-
-                JsonNode jsonNode = objectMapper.readTree(body);
-                String username = jsonNode.get("username").asText();
-                String password = jsonNode.get("password").asText();
-
-                UserDTO user = new UserDTO(username, password);
+                objectMapper.addMixIn(UserDTO.class, UserDTOMixin.class);
+                UserDTO user = ctx.bodyAsClass(UserDTO.class);
                 System.out.println("Deserialized username: " + user.getUsername());
                 System.out.println("Deserialized password: " + user.getPassword());
 
@@ -78,6 +73,7 @@ public class SecurityController implements ISecurityController {
             }
         };
     }
+
 
     @Override
     public Handler register() {
