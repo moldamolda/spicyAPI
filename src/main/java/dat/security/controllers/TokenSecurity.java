@@ -58,7 +58,7 @@ public class TokenSecurity implements ITokenSecurity {
                     .subject(user.getUsername())
                     .issuer(ISSUER)
                     .claim("username", user.getUsername())
-                    .claim("user_id", user.getId()) // Add this line
+                    .claim("id", user.getId() != null ? user.getId() : 0L)
                     .claim("role", user.getRoles().stream().reduce((s1, s2) -> s1 + "," + s2).get())
                     .expirationTime(new Date(new Date().getTime() + (long) Integer.parseInt(TOKEN_EXPIRE_TIME)))
                     .build();
